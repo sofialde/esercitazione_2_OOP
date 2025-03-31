@@ -6,6 +6,7 @@ class complex
 	
 	
 public:
+	/* costruttore di default */
 
     complex()
         : Re(0), Im(0)
@@ -19,6 +20,9 @@ public:
         : Re(n), Im(d)
     {}
     
+	/* Definizione del metodo realpart che restituisce la parte reale di un numero complesso
+		segue la definizione di impart, analogo per la parte immaginaria del numero*/
+	
     T realpart(void) const {
         return Re;
     }
@@ -27,11 +31,13 @@ public:
         return Im;
     }
 	
+	/* Definizione del metodo conjugate , che resituisce il coniugato di un numero complesso */
 	complex<T> conjugate(void) {
 		return complex<T>(Re, -Im);
 	}
     
-	
+	/* Definizione dell'operatore += per i numeri complessi; questo operatore prende 
+		una sola istanza e la aggiunge all'istanza su cui viene viene chiamato*/
     complex& operator+=(const complex& other) {
         T a = Re;
         T b = Im;
@@ -41,13 +47,15 @@ public:
         Im = b+d;
         return *this;
 	}
-
+	
+	/* Definizione dell'operatore +, sfruttando l'operatore += definito in precedenza*/
 	complex operator+(const complex& other) const {
         complex ret = *this;
         ret += other;
         return ret;
     }
 
+	/* Definizione degli operatori *= e * tra complessi*/
 	complex operator*=(const complex& other){
 		T a = Re;
         T b = Im;
@@ -63,6 +71,8 @@ public:
         return ret;
 	}
 	
+	/* Definisco gli operatori +=, +, *= e * per le operazioni tra un complesso a sinistra
+		e un type T a destra*/
 	complex& operator+=(const T& other) {
 		Re += other;
 		return *this;
@@ -75,8 +85,9 @@ public:
 	return ret;
 	}
 	
-	complex operator*=(const T& other){
+	complex& operator*=(const T& other){
 		Re *= other;
+		Im *= other;
 		return *this;
 	}
 	
@@ -87,9 +98,8 @@ public:
 	}
 };
 
-/* This operator is defined outside the complex class and is needed
- * to compute the sum of an I on the left and a complex<I> on the
- * right. */
+/* I seguenti operatori sono definiti fuori dalla classe 'complex' e servono per calcolare
+	la somma e il prodotto tra un type T a sinistra e un complesso a destra */
 template<typename T>	requires std::floating_point<T>
 complex<T>
 operator+(const T& i, const complex<T>& c)
@@ -104,7 +114,7 @@ operator*(const T& i, const complex<T>& c)
     return c * i;
 }
 
-
+/* overload dell'operatore << per stampare numeri complessi*/
 template<typename T>
 std::ostream&
 operator<<(std::ostream& os, const complex<T>& c) {
@@ -116,7 +126,3 @@ operator<<(std::ostream& os, const complex<T>& c) {
 			os << c.realpart() << "" << c.impart()<<"i";
     return os;
 }
-
-
-
-
